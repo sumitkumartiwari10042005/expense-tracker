@@ -21,7 +21,7 @@ Make sure you have the following installed:
 ToolVersionNode.jsv18+ recommendednpmcomes with Node.js
 
 1. Clone the Repository
-bashgit clone https://github.com/your-username/expense-lite.git
+bashgit clone https://github.com/sumitkumartiwari10042005/expense-tracker.git
 cd expense-lite
 
 2. Setup & Run the Server
