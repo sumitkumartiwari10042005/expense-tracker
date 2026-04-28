@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import expensesRoutes from "./routes/expenses.js";
-import db from "./db.js";   // 👈 YAHI missing tha
+import db from "./db.js";
+import { fileURLToPath } from 'url';
+
 
 const app = express();
 
@@ -32,6 +34,9 @@ app.listen(PORT, () => {
 });
 
 const path = require("path");
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "../client/build")));
 
