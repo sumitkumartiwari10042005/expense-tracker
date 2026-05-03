@@ -1,10 +1,9 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const BASE_URL = "";
 
 export async function getExpenses() {
   const res = await fetch(`${BASE_URL}/expenses`);
   return res.json();
 }
-
 export async function addExpense(expense) {
   await fetch(`${BASE_URL}/expenses`, {
     method: "POST",
@@ -12,13 +11,11 @@ export async function addExpense(expense) {
     body: JSON.stringify(expense),
   });
 }
-
 export async function deleteExpense(id) {
   await fetch(`${BASE_URL}/expenses/${id}`, {
     method: "DELETE",
   });
 }
-
 export async function updateExpense(id, expense) {
   await fetch(`${BASE_URL}/expenses/${id}`, {
     method: "PUT",
