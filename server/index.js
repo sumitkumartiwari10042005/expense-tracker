@@ -16,8 +16,8 @@ app.use(express.json());
 
 // Cleanup old expenses
 const TWO_YEARS = 1000 * 60 * 60 * 24 * 365 * 2;
-const cutoff = Date.now() - TWO_YEARS;  // ✅
-db.run(                                  // ✅
+const cutoff = Date.now() - TWO_YEARS;  
+db.run(                                 
   "DELETE FROM expenses WHERE created_at < ?",
   [cutoff],
   (err) => {
