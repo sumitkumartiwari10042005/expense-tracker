@@ -1,25 +1,38 @@
-const BASE_URL = "";
+const BASE = 'http://localhost:3000/api';
 
-export async function getExpenses() {
-  const res = await fetch(`${BASE_URL}/expenses`);
+export async function apiFetch(path, options = {}) {
+  const res = await fetch(`${BASE}${path}`, {
+    ...options,
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
   return res.json();
 }
+
+export async function getExpenses() {
+  return apiFetch('/expenses');
+}
+
 export async function addExpense(expense) {
-  await fetch(`${BASE_URL}/expenses`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+  return apiFetch('/expenses', {
+    method: 'POST',
     body: JSON.stringify(expense),
   });
 }
-export async function deleteExpense(id) {
-  await fetch(`${BASE_URL}/expenses/${id}`, {
-    method: "DELETE",
-  });
-}
+
 export async function updateExpense(id, expense) {
-  await fetch(`${BASE_URL}/expenses/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
+  return apiFetch(`/expenses/${id}`, {
+    method: 'PUT',
     body: JSON.stringify(expense),
+  });
+}
+
+export async function deleteExpense(id) {
+  return apiFetch(`/expenses/${id}`, {
+    method: 'DELETE',
   });
 }

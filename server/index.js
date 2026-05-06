@@ -1,43 +1,29 @@
-import express from "express";
-import cors from "cors";
-import expensesRoutes from "./routes/expenses.js";
-import db from "./db.js";
-import { fileURLToPath } from 'url';
-import path from 'path';
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { initDB } from './db.js';
+import authRoutes from './routes/auth.js';
+import expenseRoutes from './routes/expenses.js';
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/api/auth', authRoutes);
+app.use('/api/expenses', expenseRoutes);
+
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
-
-// Cleanup old expenses
-const TWO_YEARS = 1000 * 60 * 60 * 24 * 365 * 2;
-const cutoff = Date.now() - TWO_YEARS;  
-db.run(                                 
-  "DELETE FROM expenses WHERE created_at < ?",
-  [cutoff],
-  (err) => {
-    if (err) {
-      console.error("Cleanup error:", err.message);
-    } else {
-      console.log("Old expenses cleaned up");
-    }
-  }
+initDB().then(() =>
+  app.listen(PORT, () =>
+    console.log(`Server running on port ${PORT}`)
+  )
 );
-
-// API routes
-app.use("/expenses", expensesRoutes);
-
-// Serve frontend
-app.use(express.static(path.join(__dirname, "../client/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});

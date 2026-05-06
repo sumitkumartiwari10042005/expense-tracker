@@ -1,463 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Expense Lite</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      body {
-        background: #06080f;
-        min-height: 100vh;
-        overflow-x: hidden;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Lite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      #bg {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-      }
+    body {
+      background: #06080f;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-      /* ── NOISE TEXTURE OVERLAY ── */
-      #bg::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-        background-size: 200px 200px;
-        opacity: 0.5;
-        mix-blend-mode: overlay;
-      }
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-      /* ── GRID ── */
-      .grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
-        background-size: 56px 56px;
-      }
+    #bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+    }
 
-      /* ── BIG ORBS ── */
-      .orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(1px);
-      }
-      .orb-1 {
-        width: 900px; height: 900px;
-        background: radial-gradient(circle, rgba(99,88,226,0.13) 0%, transparent 65%);
-        top: -300px; left: -200px;
-        animation: o1 20s ease-in-out infinite alternate;
-      }
-      .orb-2 {
-        width: 600px; height: 600px;
-        background: radial-gradient(circle, rgba(52,211,153,0.09) 0%, transparent 65%);
-        bottom: -100px; right: -100px;
-        animation: o2 25s ease-in-out infinite alternate;
-      }
-      .orb-3 {
-        width: 400px; height: 400px;
-        background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 65%);
-        top: 40%; left: 30%;
-        animation: o3 30s ease-in-out infinite alternate;
-      }
-      @keyframes o1 { to { transform: translate(80px, 60px) scale(1.1); } }
-      @keyframes o2 { to { transform: translate(-60px, -40px) scale(1.12); } }
-      @keyframes o3 { to { transform: translate(40px, -60px) scale(0.9); } }
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
 
-      /* ── DIAGONAL ACCENT LINES ── */
-      .diag-lines {
-        position: absolute;
-        inset: 0;
-        overflow: hidden;
-      }
-      .diag-line {
-        position: absolute;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(124,106,255,0.15), transparent);
-        transform-origin: left center;
-      }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(1px);
+    }
+    .orb-1 {
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(99,88,226,0.13) 0%, transparent 65%);
+      top: -300px; left: -200px;
+      animation: o1 20s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(52,211,153,0.09) 0%, transparent 65%);
+      bottom: -100px; right: -100px;
+      animation: o2 25s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 65%);
+      top: 40%; left: 30%;
+      animation: o3 30s ease-in-out infinite alternate;
+    }
+    @keyframes o1 { to { transform: translate(80px, 60px) scale(1.1); } }
+    @keyframes o2 { to { transform: translate(-60px, -40px) scale(1.12); } }
+    @keyframes o3 { to { transform: translate(40px, -60px) scale(0.9); } }
 
-      /* ── CORNER BRACKET TOP-LEFT ── */
-      .bracket-tl {
-        position: absolute;
-        top: 28px; left: 28px;
-        width: 48px; height: 48px;
-        border-top: 1.5px solid rgba(124,106,255,0.4);
-        border-left: 1.5px solid rgba(124,106,255,0.4);
-        border-radius: 4px 0 0 0;
-      }
-      .bracket-tr {
-        position: absolute;
-        top: 28px; right: 28px;
-        width: 48px; height: 48px;
-        border-top: 1.5px solid rgba(52,211,153,0.25);
-        border-right: 1.5px solid rgba(52,211,153,0.25);
-        border-radius: 0 4px 0 0;
-      }
-      .bracket-bl {
-        position: absolute;
-        bottom: 28px; left: 28px;
-        width: 48px; height: 48px;
-        border-bottom: 1.5px solid rgba(52,211,153,0.25);
-        border-left: 1.5px solid rgba(52,211,153,0.25);
-        border-radius: 0 0 0 4px;
-      }
-      .bracket-br {
-        position: absolute;
-        bottom: 28px; right: 28px;
-        width: 48px; height: 48px;
-        border-bottom: 1.5px solid rgba(124,106,255,0.3);
-        border-right: 1.5px solid rgba(124,106,255,0.3);
-        border-radius: 0 0 4px 0;
-      }
+    .diag-lines { position: absolute; inset: 0; overflow: hidden; }
+    .diag-line {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(124,106,255,0.15), transparent);
+      transform-origin: left center;
+    }
 
-      /* ── HERO TEXT ── */
-      #hero {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        padding-left: 5vw;
-        pointer-events: none;
-        user-select: none;
-      }
-      .hero-inner { max-width: 320px; }
+    .bracket-tl {
+      position: absolute; top: 28px; left: 28px;
+      width: 48px; height: 48px;
+      border-top: 1.5px solid rgba(124,106,255,0.4);
+      border-left: 1.5px solid rgba(124,106,255,0.4);
+      border-radius: 4px 0 0 0;
+    }
+    .bracket-tr {
+      position: absolute; top: 28px; right: 28px;
+      width: 48px; height: 48px;
+      border-top: 1.5px solid rgba(52,211,153,0.25);
+      border-right: 1.5px solid rgba(52,211,153,0.25);
+      border-radius: 0 4px 0 0;
+    }
+    .bracket-bl {
+      position: absolute; bottom: 28px; left: 28px;
+      width: 48px; height: 48px;
+      border-bottom: 1.5px solid rgba(52,211,153,0.25);
+      border-left: 1.5px solid rgba(52,211,153,0.25);
+      border-radius: 0 0 0 4px;
+    }
+    .bracket-br {
+      position: absolute; bottom: 28px; right: 28px;
+      width: 48px; height: 48px;
+      border-bottom: 1.5px solid rgba(124,106,255,0.3);
+      border-right: 1.5px solid rgba(124,106,255,0.3);
+      border-radius: 0 0 4px 0;
+    }
 
-      .hero-eyebrow {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: rgba(124,106,255,0.65);
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .hero-eyebrow::before {
-        content: '';
-        display: block;
-        width: 24px; height: 1px;
-        background: rgba(124,106,255,0.5);
-      }
+    .floaters {
+      position: absolute; inset: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      pointer-events: none;
+    }
+    .floater {
+      position: absolute;
+      white-space: nowrap;
+      animation: floatUp linear infinite;
+      opacity: 0;
+    }
+    @keyframes floatUp {
+      0%   { opacity: 0; transform: translateY(0px); }
+      8%   { opacity: 1; }
+      88%  { opacity: 0.5; }
+      100% { opacity: 0; transform: translateY(-140px); }
+    }
 
-      .hero-title {
-        font-family: 'Sora', sans-serif;
-        font-size: clamp(26px, 3vw, 42px);
-        font-weight: 700;
-        line-height: 1.12;
-        letter-spacing: -1.5px;
-        color: #eef0f8;
-        margin-bottom: 18px;
-      }
-      .hero-title .g {
-        background: linear-gradient(130deg, #7c6aff 0%, #a78bfa 50%, #34d399 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
+    .rings {
+      position: absolute; top: 55%; left: 18%;
+      width: 1px; height: 1px;
+      pointer-events: none;
+    }
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(124,106,255,0.12);
+      transform: translate(-50%, -50%);
+      animation: pulse 6s ease-out infinite;
+    }
+    .ring:nth-child(2) { animation-delay: 2s; }
+    .ring:nth-child(3) { animation-delay: 4s; }
+    @keyframes pulse {
+      0%   { width: 0; height: 0; opacity: 0.6; }
+      100% { width: 320px; height: 320px; opacity: 0; }
+    }
 
-      .hero-sub {
-        font-family: 'Sora', sans-serif;
-        font-size: 13px;
-        color: rgba(139,145,167,0.7);
-        line-height: 1.7;
-        margin-bottom: 28px;
-        max-width: 260px;
-      }
+    .scanline {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(124,106,255,0.5) 30%, rgba(52,211,153,0.5) 70%, transparent 100%);
+      animation: scan 8s ease-in-out infinite alternate;
+    }
+    @keyframes scan {
+      0%   { transform: translateY(0); opacity: 0.6; }
+      100% { transform: translateY(100vh); opacity: 0.2; }
+    }
 
-      .badges { display: flex; flex-direction: column; gap: 9px; }
-      .badge {
-        display: flex; align-items: center; gap: 9px;
-        font-family: 'Sora', sans-serif;
-        font-size: 12px;
-        color: rgba(139,145,167,0.65);
-      }
-      .bdot {
-        width: 5px; height: 5px;
-        border-radius: 50%;
-        flex-shrink: 0;
-      }
+    .ghost-card {
+      position: absolute;
+      border: 1px solid rgba(124,106,255,0.1);
+      border-radius: 12px;
+      background: rgba(124,106,255,0.03);
+      animation: ghostFloat ease-in-out infinite alternate;
+    }
+    @keyframes ghostFloat {
+      from { transform: translateY(0px) rotate(var(--r)); }
+      to   { transform: translateY(-12px) rotate(var(--r)); }
+    }
 
-      /* ── LIVE TICKER (bottom of hero) ── */
-      .ticker {
-        position: fixed;
-        bottom: 36px;
-        left: 5vw;
-        z-index: 0;
-        pointer-events: none;
-        user-select: none;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .ticker-label {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 9px;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: rgba(85,93,120,0.6);
-        margin-bottom: 2px;
-      }
-      .ticker-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        color: rgba(85,93,120,0.5);
-      }
-      .ticker-item { display: flex; align-items: center; gap: 5px; }
-      .ticker-dot { width: 4px; height: 4px; border-radius: 50%; }
+    #root { position: relative; z-index: 1; }
 
-      /* ── FLOATING RUPEE AMOUNTS ── */
-      .floaters {
-        position: absolute;
-        inset: 0;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        pointer-events: none;
-      }
-      .floater {
-        position: absolute;
-        white-space: nowrap;
-        animation: floatUp linear infinite;
-        opacity: 0;
-      }
-      @keyframes floatUp {
-        0%   { opacity: 0; transform: translateY(0px); }
-        8%   { opacity: 1; }
-        88%  { opacity: 0.5; }
-        100% { opacity: 0; transform: translateY(-140px); }
-      }
+    @keyframes cardFloat {
+  0%   { transform: translateY(0px);   opacity: 0.6; }
+  50%  { transform: translateY(-8px);  opacity: 0.8; }
+  100% { transform: translateY(-16px); opacity: 0.5; }
+}
 
-      /* ── PULSE RINGS ── */
-      .rings {
-        position: absolute;
-        top: 55%;
-        left: 18%;
-        width: 1px; height: 1px;
-        pointer-events: none;
-      }
-      .ring {
-        position: absolute;
-        border-radius: 50%;
-        border: 1px solid rgba(124,106,255,0.12);
-        transform: translate(-50%, -50%);
-        animation: pulse 6s ease-out infinite;
-      }
-      .ring:nth-child(2) { animation-delay: 2s; }
-      .ring:nth-child(3) { animation-delay: 4s; }
-      @keyframes pulse {
-        0%   { width: 0; height: 0; opacity: 0.6; }
-        100% { width: 320px; height: 320px; opacity: 0; }
-      }
+  </style>
+</head>
 
-      /* ── RIGHT SIDE DECORATIVE CHART ── */
-      .right-deco {
-        position: fixed;
-        right: 5vw;
-        bottom: 48px;
-        z-index: 0;
-        pointer-events: none;
-        user-select: none;
-        opacity: 0.35;
-      }
+<body>
+  <div id="bg">
+    <div class="grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="scanline"></div>
+    <div class="bracket-tl"></div>
+    <div class="bracket-tr"></div>
+    <div class="bracket-bl"></div>
+    <div class="bracket-br"></div>
+    <div class="diag-lines" id="diag"></div>
+    <div class="rings">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+    <div class="ghost-card" style="width:180px;height:100px;top:12%;left:3%;--r:-4deg;animation-duration:7s;"></div>
+    <div class="ghost-card" style="width:120px;height:70px;top:70%;left:8%;--r:3deg;animation-duration:9s;animation-delay:2s;"></div>
+    <div class="ghost-card" style="width:100px;height:60px;top:20%;right:3%;--r:5deg;animation-duration:11s;border-color:rgba(52,211,153,0.1);background:rgba(52,211,153,0.02);"></div>
+    <div class="ghost-card" style="width:140px;height:80px;top:75%;right:4%;--r:-3deg;animation-duration:8s;animation-delay:3s;border-color:rgba(251,191,36,0.08);background:rgba(251,191,36,0.02);"></div>
+    <div class="floaters" id="floaters"></div>
+  </div>
+  
+  <!-- FLOATING FINANCE CARDS -->
+<div id="finance-cards" style="
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+"></div>
 
-      /* ── SCAN LINE (top) ── */
-      .scanline {
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent 0%, rgba(124,106,255,0.5) 30%, rgba(52,211,153,0.5) 70%, transparent 100%);
-        animation: scan 8s ease-in-out infinite alternate;
-      }
-      @keyframes scan {
-        0%   { transform: translateY(0); opacity: 0.6; }
-        100% { transform: translateY(100vh); opacity: 0.2; }
-      }
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
 
-      /* ── FLOATING CARDS (background decoration) ── */
-      .ghost-card {
-        position: absolute;
-        border: 1px solid rgba(124,106,255,0.1);
-        border-radius: 12px;
-        background: rgba(124,106,255,0.03);
-        animation: ghostFloat ease-in-out infinite alternate;
-      }
-      @keyframes ghostFloat {
-        from { transform: translateY(0px) rotate(var(--r)); }
-        to   { transform: translateY(-12px) rotate(var(--r)); }
-      }
+ <script>
+  // ── FINANCE NEWS CARDS ──
+  const newsItems = [
+    { icon: "📈", title: "Sensex up 1.2%", sub: "Markets rally on FII buying" },
+    { icon: "🏦", title: "RBI holds rates", sub: "Repo rate steady at 6.5%" },
+    { icon: "💡", title: "50/30/20 Rule", sub: "Needs · Wants · Savings" },
+    { icon: "🪙", title: "Gold ₹72,400/10g", sub: "Up 0.8% this week" },
+    { icon: "📊", title: "SIP crossed ₹19k Cr", sub: "Record monthly inflows" },
+    { icon: "🚨", title: "Emergency Fund", sub: "Keep 6 months expenses" },
+    { icon: "💳", title: "Credit tip", sub: "Never carry card balance" },
+    { icon: "🌱", title: "Start early", sub: "₹500/mo SIP = ₹1Cr in 30yr" },
+    { icon: "⚡", title: "UPI hits 10B tx", sub: "Record in single month" },
+    { icon: "🎯", title: "Budget first", sub: "Plan before you spend" },
+    { icon: "🔄", title: "Review subs", sub: "Cancel what you don't use" },
+    { icon: "🏠", title: "Realty up 9%", sub: "Tier-2 cities lead growth" },
+  ];
 
-      /* ── APP LAYER ── */
-      #root { position: relative; z-index: 1; }
+  const cardContainer = document.getElementById('finance-cards');
 
-      @media (max-width: 1000px) {
-        #hero, .ticker, .right-deco { display: none; }
-        body { background: #0d0f14; }
-      }
-    </style>
-  </head>
-  <body>
+  // positions — avoid center where app is
+  const positions = [
+    { left: '1%',  top: '10%' },
+    { left: '1%',  top: '35%' },
+    { left: '1%',  top: '60%' },
+    { left: '2%',  top: '80%' },
+    { left: '78%', top: '8%'  },
+    { left: '80%', top: '30%' },
+    { left: '79%', top: '55%' },
+    { left: '78%', top: '75%' },
+    { left: '38%', top: '82%' },
+    { left: '50%', top: '88%' },
+    { left: '20%', top: '90%' },
+    { left: '62%', top: '85%' },
+  ];
 
-    <div id="bg">
-      <!-- Grid -->
-      <div class="grid"></div>
+  newsItems.forEach((item, i) => {
+    const pos = positions[i % positions.length];
+    const card = document.createElement('div');
+    card.style.cssText = `
+      position: absolute;
+      left: ${pos.left};
+      top: ${pos.top};
+      background: rgba(22,25,32,0.6);
+      border: 1px solid rgba(124,106,255,0.12);
+      border-radius: 12px;
+      padding: 10px 14px;
+      width: 155px;
+      backdrop-filter: blur(8px);
+      animation: cardFloat ${10 + i * 1.5}s ease-in-out infinite alternate;
+      animation-delay: ${i * 0.8}s;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    `;
 
-      <!-- Orbs -->
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-
-      <!-- Scanline -->
-      <div class="scanline"></div>
-
-      <!-- Corner brackets -->
-      <div class="bracket-tl"></div>
-      <div class="bracket-tr"></div>
-      <div class="bracket-bl"></div>
-      <div class="bracket-br"></div>
-
-      <!-- Diagonal accent lines -->
-      <div class="diag-lines" id="diag"></div>
-
-      <!-- Pulse rings -->
-      <div class="rings">
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="font-size:14px;">${item.icon}</span>
+        <span style="font-family:'Sora',sans-serif;font-size:11px;font-weight:600;color:rgba(241,243,249,0.7);">${item.title}</span>
       </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(139,145,167,0.5);letter-spacing:0.05em;">${item.sub}</div>
+    `;
+    cardContainer.appendChild(card);
+  });
 
-      <!-- Ghost cards -->
-      <div class="ghost-card" style="width:180px;height:100px;top:12%;left:3%;--r:-4deg;animation-duration:7s;"></div>
-      <div class="ghost-card" style="width:120px;height:70px;top:70%;left:8%;--r:3deg;animation-duration:9s;animation-delay:2s;"></div>
-      <div class="ghost-card" style="width:100px;height:60px;top:20%;right:3%;--r:5deg;animation-duration:11s;border-color:rgba(52,211,153,0.1);background:rgba(52,211,153,0.02);"></div>
-      <div class="ghost-card" style="width:140px;height:80px;top:75%;right:4%;--r:-3deg;animation-duration:8s;animation-delay:3s;border-color:rgba(251,191,36,0.08);background:rgba(251,191,36,0.02);"></div>
+  // ── FLOATING RUPEE AMOUNTS ──
+  const amounts = [
+    { txt: '₹240',    col: 'rgba(124,106,255,0.15)' },
+    { txt: '₹1,200',  col: 'rgba(52,211,153,0.12)'  },
+    { txt: '₹85',     col: 'rgba(251,191,36,0.12)'  },
+    { txt: '₹3,400',  col: 'rgba(124,106,255,0.12)' },
+    { txt: '₹560',    col: 'rgba(52,211,153,0.10)'  },
+    { txt: '₹99',     col: 'rgba(248,113,113,0.12)' },
+    { txt: '₹2,800',  col: 'rgba(124,106,255,0.13)' },
+    { txt: '₹18,000', col: 'rgba(52,211,153,0.10)'  },
+    { txt: '₹750',    col: 'rgba(124,106,255,0.11)' },
+    { txt: '₹6,500',  col: 'rgba(248,113,113,0.10)' },
+  ];
 
-      <!-- Floating rupee amounts -->
-      <div class="floaters" id="floaters"></div>
-    </div>
+  const floatContainer = document.getElementById('floaters');
+  amounts.forEach((a, i) => {
+    const el = document.createElement('div');
+    el.className = 'floater';
+    el.textContent = a.txt;
+    el.style.color = a.col;
+    el.style.left = (2 + Math.random() * 92) + '%';
+    el.style.bottom = (2 + Math.random() * 90) + '%';
+    el.style.animationDuration = (14 + Math.random() * 16) + 's';
+    el.style.animationDelay = (i * 1.5) + 's';
+    floatContainer.appendChild(el);
+  });
 
-    <!-- HERO TEXT -->
-    <div id="hero">
-      <div class="hero-inner">
-        <div class="hero-eyebrow">No login required</div>
-        <h1 class="hero-title">
-          Manage your<br>
-          finances<br>
-          <span class="g">freely.</span>
-        </h1>
-        <p class="hero-sub">
-          Track every rupee, category by category. No account, no subscription. Just pure clarity.
-        </p>
-        <div class="badges">
-          <div class="badge"><div class="bdot" style="background:#7c6aff;"></div>Category-wise breakdown</div>
-          <div class="badge"><div class="bdot" style="background:#34d399;"></div>Monthly & yearly summary</div>
-          <div class="badge"><div class="bdot" style="background:#fbbf24;"></div>Export to CSV anytime</div>
-        </div>
-      </div>
-    </div>
+  // ── DIAGONAL LINES ──
+  const diag = document.getElementById('diag');
+  const lineData = [
+    { top: '10%', left: '0',   width: '20%', angle: '-6deg' },
+    { top: '30%', left: '75%', width: '25%', angle: '4deg'  },
+    { top: '50%', left: '0',   width: '18%', angle: '6deg'  },
+    { top: '70%', left: '78%', width: '22%', angle: '-5deg' },
+    { top: '85%', left: '30%', width: '20%', angle: '7deg'  },
+  ];
+  lineData.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'diag-line';
+    el.style.top = d.top;
+    el.style.left = d.left;
+    el.style.width = d.width;
+    el.style.transform = `rotate(${d.angle})`;
+    diag.appendChild(el);
+  });
+</script>
 
-    <!-- TICKER BOTTOM LEFT -->
-    <div class="ticker">
-      <div class="ticker-label">Live categories</div>
-      <div class="ticker-row">
-        <div class="ticker-item"><div class="ticker-dot" style="background:#fbbf24;"></div>Food</div>
-        <div class="ticker-item"><div class="ticker-dot" style="background:#34d399;"></div>Transport</div>
-        <div class="ticker-item"><div class="ticker-dot" style="background:#f87171;"></div>Bills</div>
-        <div class="ticker-item"><div class="ticker-dot" style="background:#8b91a7;"></div>Other</div>
-      </div>
-    </div>
-
-    <!-- RIGHT SIDE DECORATIVE SVG CHART -->
-    <div class="right-deco">
-      <svg width="140" height="110" viewBox="0 0 140 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Axes -->
-        <line x1="16" y1="90" x2="130" y2="90" stroke="rgba(139,145,167,0.3)" stroke-width="0.5"/>
-        <line x1="16" y1="10" x2="16" y2="90" stroke="rgba(139,145,167,0.3)" stroke-width="0.5"/>
-        <!-- Area fill -->
-        <path d="M16 72 L36 58 L56 65 L76 40 L96 48 L116 28 L130 35 L130 90 L16 90Z" fill="url(#chartfill)" opacity="0.6"/>
-        <!-- Line -->
-        <path d="M16 72 L36 58 L56 65 L76 40 L96 48 L116 28 L130 35" stroke="rgba(124,106,255,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Dots -->
-        <circle cx="76" cy="40" r="3" fill="#7c6aff" opacity="0.9"/>
-        <circle cx="116" cy="28" r="3" fill="#34d399" opacity="0.9"/>
-        <!-- Grid lines -->
-        <line x1="16" y1="70" x2="130" y2="70" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
-        <line x1="16" y1="50" x2="130" y2="50" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
-        <line x1="16" y1="30" x2="130" y2="30" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
-        <!-- Labels -->
-        <text x="70" y="105" fill="rgba(139,145,167,0.4)" font-family="JetBrains Mono" font-size="8" text-anchor="middle">spending trend</text>
-        <defs>
-          <linearGradient id="chartfill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#7c6aff" stop-opacity="0.25"/>
-            <stop offset="100%" stop-color="#7c6aff" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
-
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-
-    <script>
-      // Floating rupee amounts — left zone only
-      const amounts = [
-        { txt: '₹240', col: 'rgba(124,106,255,0.18)' },
-        { txt: '₹1,200', col: 'rgba(52,211,153,0.15)' },
-        { txt: '₹85', col: 'rgba(251,191,36,0.15)' },
-        { txt: '₹3,400', col: 'rgba(124,106,255,0.14)' },
-        { txt: '₹560', col: 'rgba(52,211,153,0.12)' },
-        { txt: '₹99', col: 'rgba(248,113,113,0.14)' },
-        { txt: '₹2,800', col: 'rgba(124,106,255,0.16)' },
-        { txt: '₹450', col: 'rgba(251,191,36,0.12)' },
-        { txt: '₹18,000', col: 'rgba(52,211,153,0.13)' },
-        { txt: '₹750', col: 'rgba(124,106,255,0.14)' },
-        { txt: '₹6,500', col: 'rgba(248,113,113,0.12)' },
-        { txt: '₹320', col: 'rgba(52,211,153,0.15)' },
-      ];
-
-      const container = document.getElementById('floaters');
-      amounts.forEach((a, i) => {
-        const el = document.createElement('div');
-        el.className = 'floater';
-        el.textContent = a.txt;
-        el.style.color = a.col;
-        el.style.left = (3 + Math.random() * 30) + '%';
-        el.style.bottom = (5 + Math.random() * 75) + '%';
-        el.style.animationDuration = (16 + Math.random() * 14) + 's';
-        el.style.animationDelay = (i * 1.8) + 's';
-        container.appendChild(el);
-      });
-
-      // Diagonal lines
-      const diag = document.getElementById('diag');
-      const lineData = [
-        { top: '15%', left: '0', width: '40%', angle: '-8deg' },
-        { top: '35%', left: '5%', width: '30%', angle: '-8deg' },
-        { top: '60%', left: '2%', width: '25%', angle: '-8deg' },
-        { top: '80%', left: '0', width: '35%', angle: '-8deg' },
-      ];
-      lineData.forEach(d => {
-        const el = document.createElement('div');
-        el.className = 'diag-line';
-        el.style.top = d.top;
-        el.style.left = d.left;
-        el.style.width = d.width;
-        el.style.transform = `rotate(${d.angle})`;
-        diag.appendChild(el);
-      });
-    </script>
-  </body>
+</body>
 </html>
