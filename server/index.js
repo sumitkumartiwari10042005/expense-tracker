@@ -30,8 +30,14 @@ const authLimiter = rateLimit({
   message: { error: 'Too many attempts, try after 15 minutes' }
 });
 
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100, // expenses pe relaxed — 100 requests
+  message: { error: 'Too many requests, slow down!' }
+});
+
 app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/expenses', expenseRoutes);
+app.use('/api/expenses',apiLimiter, expenseRoutes);
 
 // Production me React serve karo
 if (process.env.NODE_ENV === 'production') {
