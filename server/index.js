@@ -14,12 +14,22 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// app.use(cors({
+//   origin: process.env.NODE_ENV === 'production'
+//     ? 'https://expense-tracker-1-cde9.onrender.com'
+//     : 'http://localhost:5173',
+//   credentials: true
+// }));
+
+app.set('trust proxy', 1);
+
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? 'https://expense-tracker-1-cde9.onrender.com'
+    ? true
     : 'http://localhost:5173',
   credentials: true
 }));
+
 
 app.use(express.json());
 app.use(cookieParser());
