@@ -27,9 +27,10 @@ app.use('/api/expenses', expenseRoutes);
 
 // Production me React serve karo
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../client/dist')));
+  const distPath = path.join(__dirname, '../client/dist');  // ✅ fix
+  app.use(express.static(distPath));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/dist', 'index.html'));
+    res.sendFile(path.join(distPath, 'index.html'));
   });
 }
 
