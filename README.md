@@ -1,143 +1,197 @@
 # 💸 Expense Lite
 
-A lightweight personal expense tracker that lets you log expenses, categorize them, and visualize spending through pie charts and tables — all running locally with no cloud dependency.
+A modern personal expense tracker with user authentication, per-user data isolation, and a sleek dark UI — built with React, Express, and PostgreSQL.
+
+![Expense Lite](https://img.shields.io/badge/Status-Live-brightgreen) ![Node](https://img.shields.io/badge/Node.js-v24-green) ![React](https://img.shields.io/badge/React-18-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-3ECF8E)
+
+---
+
+## 🌐 Live Demo
+
+👉 [https://expense-tracker-1-cde9.onrender.com](https://expense-tracker-1-cde9.onrender.com)
 
 ---
 
 ## ✨ Features
 
-- Add and track daily expenses with custom categories
-- Visual breakdown via interactive **pie charts**
-- Tabular view of all expense entries
-- Persistent storage using **SQLite** (no external DB setup needed)
-- Fast, minimal UI built with **React + Vite**
+- 🔐 **Auth** — Register & Login with JWT stored in HttpOnly cookies (XSS-safe)
+- 👤 **Per-user data** — Every user sees only their own expenses
+- 📊 **Category chart** — Live pie chart breakdown of spending
+- 📅 **Monthly & yearly summary** — Filter expenses by month
+- 📡 **Finance tips & news** — Rotating market tips in sidebar
+- 💾 **Export CSV** — Download your expense history anytime
+- 🌙 **Dark UI** — Animated background with orbs, grid, floating cards
+- 📱 **Responsive** — Works on mobile too
 
 ---
 
 ## 🗂️ Project Structure
 
-```
-expense-tracker/
-├── client/         # React + Vite frontend
-├── server/         # Express + SQLite backend
-└── package.json    # Root runner (starts both at once)
-```
+expense-lite/
+├── client/
+│   ├── node_modules/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── CategoryChart.jsx
+│   │   │   ├── ExpenseForm.jsx
+│   │   │   ├── ExpenseList.jsx
+│   │   │   └── Summary.jsx
+│   │   ├── App.jsx
+│   │   ├── Auth.jsx
+│   │   ├── api.js
+│   │   ├── styles.css
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
+│
+├── server/
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── node_modules/
+│   ├── routes/
+│   │   ├── auth.js
+│   │   └── expenses.js
+│   ├── server/
+│   │   ├── .env
+│   │   ├── db.js
+│   │   ├── index.js
+│   │   └── package.json
+│   └── package.json
+│
+├── App.jsx          ← ye root mein kyun hai? Delete kar do!
+├── package.json
+└── README.md
 
 ---
 
-## 🚀 Getting Started (Local Dev)
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 + Vite |
+| Styling | Custom CSS + Google Fonts (Sora, JetBrains Mono) |
+| Charts | Chart.js + react-chartjs-2 |
+| Backend | Node.js + Express |
+| Database | PostgreSQL (Supabase) |
+| Auth | JWT + HttpOnly Cookies |
+| Deployment | Render |
+
+---
+
+## 🚀 Local Development
 
 ### Prerequisites
 
-Make sure you have the following installed:
+- Node.js v18+
+- PostgreSQL database (local or [Supabase](https://supabase.com))
 
-| Tool | Version |
-|------|---------|
-| [Node.js](https://nodejs.org/) | v18+ recommended |
-| npm | comes with Node.js |
-
----
-
-### 1. Clone the Repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/sumitkumartiwari10042005/expense-tracker.git
 cd expense-tracker
 ```
 
----
-
-### 2. Install All Dependencies
-
-Install dependencies for root, server, and client:
+### 2. Install dependencies
 
 ```bash
-npm install
+# Server
 npm install --prefix server
+
+# Client
 npm install --prefix client
 ```
 
----
+### 3. Setup environment
 
-### 3. Run the App
+Create `server/.env`:
 
-From the **root directory**, start both frontend and backend at once:
+```env
+PORT=3000
+JWT_SECRET=your_super_secret_key_here
+NODE_ENV=development
+DATABASE_URL=postgresql://postgres:password@localhost:5432/expense_tracker
+```
+
+### 4. Run
 
 ```bash
+# Terminal 1 — Backend
+cd server
+npm run dev
+
+# Terminal 2 — Frontend
+cd client
 npm run dev
 ```
 
-This uses `concurrently` to launch both in a single terminal — no need to open multiple tabs.
-
 | Service | URL |
-|---------|-----|
-| Frontend (Vite) | http://localhost:5173 |
-| Backend (Express) | http://localhost:3000 |
+|---|---|
+| Frontend | http://localhost:5173 |
+| Backend | http://localhost:3000 |
 
 ---
 
-## 🛠️ Scripts
+## 🗃️ Database Schema
 
-### Root (run from project root)
+```sql
+-- Users table
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start both client and server simultaneously |
-| `npm run client` | Start only the frontend |
-| `npm run server` | Start only the backend |
+-- Expenses table
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  amount NUMERIC(10,2) NOT NULL,
+  category VARCHAR(100) NOT NULL,
+  description TEXT,
+  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
 
-### Client (`/client`)
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server with hot reload |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview the production build locally |
-
-### Server (`/server`)
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start the Express server |
-| `npm start` | Same as dev (alias) |
-
----
-
-## 📦 Dependencies
-
-### Root
-
-| Package | Purpose |
-|---------|---------|
-| `concurrently` | Run client and server scripts simultaneously |
-| `npm-run-all` | Utility for running multiple npm scripts |
-
-### Server
-
-| Package | Purpose |
-|---------|---------|
-| `express` | HTTP server & REST API |
-| `cors` | Allows the frontend to communicate with the backend |
-| `sqlite3` | Local file-based database — no setup required |
-
-### Client
-
-| Package | Purpose |
-|---------|---------|
-| `react` + `react-dom` | UI framework |
-| `chart.js` | Chart rendering engine |
-| `react-chartjs-2` | React wrapper for Chart.js |
-| `chartjs-plugin-datalabels` | Labels on pie chart slices |
-| `vite` | Dev server & bundler |
+Tables are **auto-created** on server start — no manual migration needed.
 
 ---
 
-## 🗃️ Database
+## 🔒 Security
 
-Expense Lite uses **SQLite** via the `sqlite3` package. The database file is created automatically when you first run the server — no manual setup or migrations needed. You'll find it (e.g., `expenses.db`) inside the `server/` folder after first run — don't delete it or you'll lose your data.
+- Passwords hashed with **bcryptjs** (10 salt rounds)
+- JWT stored in **HttpOnly cookies** — not accessible via JavaScript
+- `sameSite: strict` — CSRF protection
+- `secure: true` in production — HTTPS only
+- Per-user data isolation — users can only access their own expenses
+
+---
+
+## ☁️ Deployment (Render)
+
+**Build Command:**
+
+npm install --prefix server && npm install --prefix client --include=dev && npm run build --prefix client
+
+**Start Command:**
+node server/index.js
+
+**Environment Variables:**
+DATABASE_URL = your_supabase_connection_string
+JWT_SECRET   = your_secret_key
+NODE_ENV     = production
 
 ---
 
 ## 📄 License
 
 MIT — use it however you like.
+
+---
+
+<div align="center">
+  Made with 💜 by <a href="https://github.com/sumitkumartiwari10042005">Sumit Kumar Tiwari</a>
+</div>
