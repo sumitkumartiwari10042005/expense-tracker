@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:3000/api';
+const BASE = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
 
 export async function apiFetch(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
@@ -9,7 +9,6 @@ export async function apiFetch(path, options = {}) {
       ...options.headers,
     },
   });
-
   return res.json();
 }
 
