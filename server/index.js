@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 import { initDB } from './db.js';
 import authRoutes from './routes/auth.js';
 import expenseRoutes from './routes/expenses.js';
+import rateLimit from 'express-rate-limit';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,7 +24,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/auth', authRoutes);
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // max 20 attempts
+  message: { error: 'Too many attempts, try after 15 minutes' }
+});
+
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/expenses', expenseRoutes);
 
 // Production me React serve karo
