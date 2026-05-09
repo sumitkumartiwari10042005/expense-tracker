@@ -37,13 +37,29 @@ app.use(cookieParser());
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 20, // max 20 attempts
-  message: { error: 'Too many attempts, try after 15 minutes' }
+  message: { error: 'Too many attempts, try after 15 minutes' },
+
+   standardHeaders: true,
+  legacyHeaders: false,
+
+  keyGenerator: (req) => {
+    const email = req.body?.email || 'anonymous';
+    return `${req.ip}-${email}`;
+  },
 });
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100, // expenses pe relaxed — 100 requests
-  message: { error: 'Too many requests, slow down!' }
+  message: { error: 'Too many requests, slow down!' },
+
+   standardHeaders: true,
+  legacyHeaders: false,
+
+  keyGenerator: (req) => {
+    const email = req.body?.email || 'anonymous';
+    return `${req.ip}-${email}`;
+  },
 });
 
 app.use('/api/auth', authLimiter, authRoutes);
