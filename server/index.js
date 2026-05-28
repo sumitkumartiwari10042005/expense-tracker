@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { initDB } from './db.js';
 import authRoutes from './routes/auth.js';
 import expenseRoutes from './routes/expenses.js';
-import rateLimit from 'express-rate-limit';
+import rateLimit , {ipKeyGenerator} from 'express-rate-limit';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -44,7 +44,7 @@ const authLimiter = rateLimit({
 
   keyGenerator: (req) => {
     const email = req.body?.email || 'anonymous';
-    return `${req.ip}-${email}`;
+    return `${ipKeyGenerator(req.ip)}-${email}`;
   },
 });
 
@@ -58,7 +58,7 @@ const apiLimiter = rateLimit({
 
   keyGenerator: (req) => {
     const email = req.body?.email || 'anonymous';
-    return `${req.ip}-${email}`;
+     return `${ipKeyGenerator(req.ip)}-${email}`;
   },
 });
 
@@ -78,3 +78,13 @@ const PORT = process.env.PORT || 3000;
 initDB().then(() =>
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 );
+
+
+setInterval(async () => {
+  try {
+    await pool.query('SELECT 1');
+    console.log('DB keep-alive ping sent');
+  } catch (e) {
+    console.log('DB ping failed:', e.message);
+  }
+}, 4 * 24 * 60 * 60 * 1000);
