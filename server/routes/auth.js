@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { pool } from '../db.js';
-const router = express.Router();
 import express from 'express';
 import auth from '../middleware/auth.js'
 
+const router = express.Router();
 
 const generateAccessToken = (user) => {
   return jwt.sign(
@@ -37,7 +37,7 @@ const REFRESH_COOKIE_OPTIONS = {
 };
 
 const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+ /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
 
 // Register
 router.post('/register', async (req, res) => {
