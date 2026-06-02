@@ -15,7 +15,7 @@ export default function App() {
 
   useEffect(() => {
     apiFetch('/auth/me')
-      .then(data => { if (data.user) setUser(data.user); })
+      .then(data => { if (data?.user) setUser(data.user); })
       .finally(() => setCheckingAuth(false));
   }, []);
 

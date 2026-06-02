@@ -14,7 +14,7 @@ export default function Auth({ onLogin }) {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
 
-    if (mode ==='register' && !passwordRegex.test(password)) {
+    if (mode === 'register' && !passwordRegex.test(password)) {
       setError(
         'Password must be at least 8 characters and include uppercase, lowercase, number, and special character'
       );
@@ -161,107 +161,112 @@ export default function Auth({ onLogin }) {
           ))}
         </div>
 
-        {/* Email */}
-        <div style={{ marginBottom: 14 }}>
-          <label style={{
-            color: 'rgba(255,255,255,0.4)',
-            fontSize: 11,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            marginBottom: 6,
-            display: 'block',
-            fontFamily: 'JetBrains Mono, monospace',
-          }}>Email</label>
-          <input
-            placeholder="you@example.com"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            style={{
-              width: '100%', padding: '11px 14px',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 10, color: '#fff',
-              fontSize: 14, boxSizing: 'border-box',
-              outline: 'none',
-              fontFamily: 'Sora, sans-serif',
-              transition: 'border 0.2s',
-            }}
-            onFocus={e => e.target.style.borderColor = 'rgba(124,106,255,0.5)'}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
-          />
-        </div>
+        <form onSubmit={e => { e.preventDefault(); handleSubmit(); }} style={{ display: 'contents' }}>
 
-        {/* Password */}
-        <div style={{ marginBottom: 22 }}>
-          <label style={{
-            color: 'rgba(255,255,255,0.4)',
-            fontSize: 11,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            marginBottom: 6,
-            display: 'block',
-            fontFamily: 'JetBrains Mono, monospace',
-          }}>Password</label>
-          <input
-            placeholder="••••••••"
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-            style={{
-              width: '100%', padding: '11px 14px',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 10, color: '#fff',
-              fontSize: 14, boxSizing: 'border-box',
-              outline: 'none',
-              fontFamily: 'Sora, sans-serif',
-              transition: 'border 0.2s',
-            }}
-            onFocus={e => e.target.style.borderColor = 'rgba(124,106,255,0.5)'}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
-          />
-          <p style={{
-            color: 'rgba(255,255,255,0.35)',
-            fontSize: 11,
-            marginTop: 6
-          }}>
-            Must contain 8+ chars, uppercase, lowercase, number & special character
-          </p>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div style={{
-            background: 'rgba(239,68,68,0.1)',
-            border: '1px solid rgba(239,68,68,0.25)',
-            borderRadius: 8, padding: '10px 14px',
-            color: '#f87171', fontSize: 13, marginBottom: 16,
-          }}>
-            ⚠️ {error}
+          {/* Email */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={{
+              color: 'rgba(255,255,255,0.4)',
+              fontSize: 11,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              marginBottom: 6,
+              display: 'block',
+              fontFamily: 'JetBrains Mono, monospace',
+            }}>Email</label>
+            <input
+              placeholder="you@example.com"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              style={{
+                width: '100%', padding: '11px 14px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 10, color: '#fff',
+                fontSize: 14, boxSizing: 'border-box',
+                outline: 'none',
+                fontFamily: 'Sora, sans-serif',
+                transition: 'border 0.2s',
+              }}
+              onFocus={e => e.target.style.borderColor = 'rgba(124,106,255,0.5)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+            />
           </div>
-        )}
 
-        {/* Button */}
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          style={{
-            width: '100%', padding: '13px 0',
-            background: loading
-              ? 'rgba(124,106,247,0.4)'
-              : 'linear-gradient(135deg, #7c6af7, #5b4fcf)',
-            color: '#fff', border: 'none',
-            borderRadius: 10,
-            cursor: loading ? 'not-allowed' : 'pointer',
-            fontSize: 15, fontWeight: 600,
-            boxShadow: loading ? 'none' : '0 4px 24px rgba(124,106,247,0.35)',
-            transition: 'all 0.2s',
-            fontFamily: 'Sora, sans-serif',
-          }}>
-          {loading ? '⏳ Please wait...' : mode === 'login' ? '🔐 Login' : '🚀 Create Account'}
-        </button>
+          {/* Password */}
+          <div style={{ marginBottom: 22 }}>
+            <label style={{
+              color: 'rgba(255,255,255,0.4)',
+              fontSize: 11,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              marginBottom: 6,
+              display: 'block',
+              fontFamily: 'JetBrains Mono, monospace',
+            }}>Password</label>
+            <input
+              type="password"
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+              placeholder="••••••••"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              style={{
+                width: '100%', padding: '11px 14px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 10, color: '#fff',
+                fontSize: 14, boxSizing: 'border-box',
+                outline: 'none',
+                fontFamily: 'Sora, sans-serif',
+                transition: 'border 0.2s',
+              }}
+              onFocus={e => e.target.style.borderColor = 'rgba(124,106,255,0.5)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+            />
+            <p style={{
+              color: 'rgba(255,255,255,0.35)',
+              fontSize: 11,
+              marginTop: 6
+            }}>
+              Must contain 8+ chars, uppercase, lowercase, number & special character
+            </p>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div style={{
+              background: 'rgba(239,68,68,0.1)',
+              border: '1px solid rgba(239,68,68,0.25)',
+              borderRadius: 8, padding: '10px 14px',
+              color: '#f87171', fontSize: 13, marginBottom: 16,
+            }}>
+              ⚠️ {error}
+            </div>
+          )}
+
+          {/* Button */}
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            style={{
+              width: '100%', padding: '13px 0',
+              background: loading
+                ? 'rgba(124,106,247,0.4)'
+                : 'linear-gradient(135deg, #7c6af7, #5b4fcf)',
+              color: '#fff', border: 'none',
+              borderRadius: 10,
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: 15, fontWeight: 600,
+              boxShadow: loading ? 'none' : '0 4px 24px rgba(124,106,247,0.35)',
+              transition: 'all 0.2s',
+              fontFamily: 'Sora, sans-serif',
+            }}>
+            {loading ? '⏳ Please wait...' : mode === 'login' ? '🔐 Login' : '🚀 Create Account'}
+          </button>
+
+        </form>
 
         <p style={{
           textAlign: 'center', marginTop: 18,
