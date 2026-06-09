@@ -26,6 +26,7 @@ export default function Auth({ onLogin, message }) {
         method: 'POST',
         body: JSON.stringify({ email, password }),
       });
+      if (!data) return setError('Something went wrong, try again');
       if (data.error) return setError(data.error);
       onLogin(data.user);
       localStorage.setItem('isLoggedIn', 'true');

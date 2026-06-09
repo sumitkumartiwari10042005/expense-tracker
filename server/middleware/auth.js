@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { pool } from '../db.js'; 
 
 export default async function auth(req, res, next) {
 

@@ -15,18 +15,27 @@ export default function App() {
   const [sessionMsg, setSessionMsg] = useState('');
 
   useEffect(() => {
-    const flag = localStorage.getItem('isLoggedIn');
-    if (!flag) {
-      setCheckingAuth(false);
-      return;
-    }
+    const checkAuth = async () => { 
+      const flag = localStorage.getItem('isLoggedIn');
+      if (!flag) { setCheckingAuth(false); return; }
 
-    apiFetch('/auth/me')
-      .then(data => {
-        if (data?.user) setUser(data.user);
-        else localStorage.removeItem('isLoggedIn');
-      })
-      .finally(() => setCheckingAuth(false));
+      const data = await apiFetch('/auth/me');
+      if (data?.user) {
+        setUser(data.user);
+      } else {
+        const refreshed = await apiFetch('/auth/refresh', { method: 'POST' });
+        if (refreshed?.success) {
+          const retry = await apiFetch('/auth/me');
+          if (retry?.user) setUser(retry.user);
+          else localStorage.removeItem('isLoggedIn');
+        } else {
+          localStorage.removeItem('isLoggedIn');
+        }
+      }
+      setCheckingAuth(false);
+    };
+
+    checkAuth(); 
   }, []);
 
   useEffect(() => { if (user) loadExpenses(); }, [user]);
@@ -35,7 +44,7 @@ export default function App() {
     const handler = () => {
       setUser(null);
       setExpenses([]);
-      setSessionMsg('Session expired, please login again');  
+      setSessionMsg('Session expired, please login again');
     };
     window.addEventListener('force-logout', handler);
     return () => window.removeEventListener('force-logout', handler);
@@ -43,7 +52,7 @@ export default function App() {
 
   async function loadExpenses() {
     const data = await getExpenses();
-    setExpenses(data);
+    setExpenses(data || []);
   }
 
   async function handleAdd(expense) {
@@ -68,7 +77,7 @@ export default function App() {
     setExpenses([]);
   }
 
-  const total = expenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+  const total = (expenses || []).reduce((sum, e) => sum + parseFloat(e.amount), 0);
 
   const filteredExpenses = (activeMonth
     ? expenses.filter((e) => {
@@ -91,7 +100,7 @@ export default function App() {
     </div>
   );
 
-  if (!user) return <Auth onLogin={setUser}  message={sessionMsg} />;
+  if (!user) return <Auth onLogin={setUser} message={sessionMsg} />;
 
   return (
     <div style={{ minHeight: '100vh', fontFamily: 'Sora, sans-serif' }}>
