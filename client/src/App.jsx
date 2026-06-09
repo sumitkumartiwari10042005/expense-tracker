@@ -12,6 +12,7 @@ export default function App() {
   const [activeMonth, setActiveMonth] = useState(null);
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [sessionMsg, setSessionMsg] = useState('');
 
   useEffect(() => {
     const flag = localStorage.getItem('isLoggedIn');
@@ -22,13 +23,23 @@ export default function App() {
 
     apiFetch('/auth/me')
       .then(data => {
-         if (data?.user) setUser(data.user);
-         else localStorage.removeItem('isLoggedIn'); 
-       })
+        if (data?.user) setUser(data.user);
+        else localStorage.removeItem('isLoggedIn');
+      })
       .finally(() => setCheckingAuth(false));
   }, []);
 
   useEffect(() => { if (user) loadExpenses(); }, [user]);
+
+  useEffect(() => {
+    const handler = () => {
+      setUser(null);
+      setExpenses([]);
+      setSessionMsg('Session expired, please login again');  
+    };
+    window.addEventListener('force-logout', handler);
+    return () => window.removeEventListener('force-logout', handler);
+  }, []);
 
   async function loadExpenses() {
     const data = await getExpenses();
@@ -80,7 +91,7 @@ export default function App() {
     </div>
   );
 
-  if (!user) return <Auth onLogin={setUser} />;
+  if (!user) return <Auth onLogin={setUser}  message={sessionMsg} />;
 
   return (
     <div style={{ minHeight: '100vh', fontFamily: 'Sora, sans-serif' }}>

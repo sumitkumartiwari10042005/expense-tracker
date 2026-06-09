@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export default function auth(req, res, next) {
+export default async function auth(req, res, next) {
 
   const accessToken = req.cookies?.accessToken;
 
@@ -16,6 +16,12 @@ export default function auth(req, res, next) {
       accessToken,
       process.env.JWT_ACCESS_SECRET
     );
+    
+    const result = await pool.query('SELECT id, email FROM users WHERE id = $1', [decoded.id]);
+
+     if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'User not found, please login again' });
+    }
 
     req.user = decoded;
 

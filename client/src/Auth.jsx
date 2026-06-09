@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { apiFetch } from './api';
 
-export default function Auth({ onLogin }) {
+export default function Auth({ onLogin, message }) {
   const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -161,6 +161,20 @@ export default function Auth({ onLogin }) {
             </button>
           ))}
         </div>
+
+
+        {message && (
+          <div style={{
+            background: 'rgba(239,68,68,0.1)',
+            border: '1px solid rgba(239,68,68,0.25)',
+            borderRadius: 8, padding: '10px 14px',
+            color: '#f87171', fontSize: 13,
+            marginBottom: 16, textAlign: 'center',
+          }}>
+            ⚠️ {message}
+          </div>
+        )}
+
 
         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }} style={{ display: 'contents' }}>
 

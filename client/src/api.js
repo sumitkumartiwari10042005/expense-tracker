@@ -11,7 +11,11 @@ export async function apiFetch(path, options = {}) {
       },
     });
 
-    if (res.status === 401) return null;
+    if (res.status === 401){
+       localStorage.removeItem('isLoggedIn');
+       window.dispatchEvent(new Event('force-logout')); 
+       return null;
+    }
 
     return res.json();
   } catch {
