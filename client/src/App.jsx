@@ -14,8 +14,17 @@ export default function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
+    const flag = localStorage.getItem('isLoggedIn');
+    if (!flag) {
+      setCheckingAuth(false);
+      return;
+    }
+
     apiFetch('/auth/me')
-      .then(data => { if (data?.user) setUser(data.user); })
+      .then(data => {
+         if (data?.user) setUser(data.user);
+         else localStorage.removeItem('isLoggedIn'); 
+       })
       .finally(() => setCheckingAuth(false));
   }, []);
 
@@ -43,6 +52,7 @@ export default function App() {
 
   async function handleLogout() {
     await apiFetch('/auth/logout', { method: 'POST' });
+    localStorage.removeItem('isLoggedIn');
     setUser(null);
     setExpenses([]);
   }
@@ -50,13 +60,13 @@ export default function App() {
   const total = expenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
 
   const filteredExpenses = (activeMonth
-  ? expenses.filter((e) => {
+    ? expenses.filter((e) => {
       const d = new Date(e.created_at);
       const key = `${d.getFullYear()}-${d.getMonth()}`;
       return key === activeMonth;
     })
-  : expenses
-).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    : expenses
+  ).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   if (checkingAuth) return (
     <div style={{

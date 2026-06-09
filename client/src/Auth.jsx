@@ -28,6 +28,7 @@ export default function Auth({ onLogin }) {
       });
       if (data.error) return setError(data.error);
       onLogin(data.user);
+      localStorage.setItem('isLoggedIn', 'true');
     } catch {
       setError('Something went wrong, try again');
     } finally {
